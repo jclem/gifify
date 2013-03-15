@@ -1,6 +1,6 @@
 # gifify
 
-gifify is a shell scriopt for converting screen recordings into GIFs that can be embedded conveniently into places like Campfire chatrooms or GitHub issues and pull requests.
+gifify is a shell script for converting screen recordings into GIFs that can be embedded conveniently into places like Campfire chatrooms or GitHub issues and pull requests.
 
 ## Installation
 
@@ -13,7 +13,7 @@ curl -o /usr/local/bin/gifify -O https://raw.github.com/jclem/gifify/master/gifi
 
 ## Usage
 
-Given a file `recording.mov` that was recorded with Quicktime:
+Given a file `recording.mov`:
 
 ### Convert it into output.gif:
 
