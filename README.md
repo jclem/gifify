@@ -47,6 +47,8 @@ gifify -ux recording.mov
 
 \* Requires the [CloudApp gem][2]
 
+![http://f.cl.ly/items/1V0b3N4005372w261C0G/output.gif](http://f.cl.ly/items/1V0b3N4005372w261C0G/output.gif)
+
 ## License
 
 MIT (See [LICENSE][3])
