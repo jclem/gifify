@@ -15,34 +15,34 @@ curl -o /usr/local/bin/gifify -O https://raw.github.com/jclem/gifify/master/gifi
 
 Given a file `recording.mov`:
 
-### Convert it into output.gif:
+### Convert it into recording.mov.gif, and upload it to CloudApp:
 
 ```sh
 gifify recording.mov
 ```
 
-### Convert it into new_gif.gif
+### Convert it into new_gif.gif, and upload it to CloudApp
 
 ```sh
 gifify -o new_gif recording.mov
 ```
 
-### Convert it, cropping the top left corner:
+### Convert it, cropping the top left corner, and upload:
 
 ```sh
 gifify -c 100:100 recording.mov
 ```
 
-### Convert it, and upload it to CloudApp*:
+### Convert it, and do not upload it to CloudApp*:
 
 ```sh
-gifify -u recording.mov
+gifify -n recording.mov
 ```
 
-### Convert it, upload it, then destroy the gif*:
+### Convert it, upload it, then destroy the gif, and the original file*:
 
 ```sh
-gifify -ux recording.mov
+gifify -x recording.mov
 ```
 
 \* Requires the [CloudApp gem][2]
