@@ -43,7 +43,7 @@ gifify -c 100:100 recording.mov
 gifify -n recording.mov
 ```
 
-### Convert it, upload it, then destroy the gif, and the original file:
+### Convert it, upload it, then destroy the gif and the original file:
 
 ```sh
 gifify -x recording.mov
