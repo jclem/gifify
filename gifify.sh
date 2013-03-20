@@ -2,29 +2,30 @@
 
 function printHelpAndExit {
   echo 'Usage:'
-  echo '  gifify -coux filename'
+  echo '  gifify -conx filename'
   echo ''
   echo 'Options: (all optional)'
   echo '  c CROP:   The x and y crops, from the top left of the image, i.e. 640:480'
   echo '  o OUTPUT: The basename of the file to be output (default "output")'
-  echo '  u:        Upload the resulting image to CloudApp'
-  echo '  x:        Remove the resulting image once the script is complete'
+  echo '  n:        Do not upload the resulting image to CloudApp'
+  echo '  x:        Remove the original file and resulting .gif once the script is complete'
   echo ''
   echo 'Example:'
-  echo '  gifify -c 240:80 -o my-gif -u -x my-movie.mov'
+  echo '  gifify -c 240:80 -o my-gif -x my-movie.mov'
   exit $1
 }
 
-output=output
+output=$1
+noupload=0
 
 OPTERR=0
 
-while getopts "c:o:ux" opt; do
+while getopts "c:o:nx" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
     o) output=$OPTARG;;
-    u) upload=1;;
+    n) noupload=1;;
     x) cleanup=1;;
     *) printHelpAndExit 1;;
   esac
@@ -41,14 +42,15 @@ else
   crop=
 fi
 
-ffmpeg -i $filename -pix_fmt rgb24 -r 10 ${crop} ${output}.gif
+ffmpeg -i $filename -pix_fmt rgb24 -r 10 $crop ${output}.gif
 
 convert -layers Optimize ${output}.gif ${output}.gif
 
-if [ $upload ]; then
+if [ $noupload -ne 1 ]; then
   echo `cloudapp -d ${output}.gif`
 
   if [ $cleanup ]; then
+    rm $filename
     rm ${output}.gif
   fi
 else
