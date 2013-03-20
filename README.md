@@ -11,6 +11,10 @@ curl -o /usr/local/bin/gifify -O https://raw.github.com/jclem/gifify/master/gifi
   chmod +x /usr/local/bin/gifify
 ```
 
+## Dependencies
+
+Requires the [CloudApp gem][2]
+
 ## Usage
 
 Given a file `recording.mov`:
@@ -33,19 +37,17 @@ gifify -o new_gif recording.mov
 gifify -c 100:100 recording.mov
 ```
 
-### Convert it, and do not upload it to CloudApp*:
+### Convert it, and do not upload it to CloudApp:
 
 ```sh
 gifify -n recording.mov
 ```
 
-### Convert it, upload it, then destroy the gif, and the original file*:
+### Convert it, upload it, then destroy the gif, and the original file:
 
 ```sh
 gifify -x recording.mov
 ```
-
-\* Requires the [CloudApp gem][2]
 
 ![http://f.cl.ly/items/1V0b3N4005372w261C0G/output.gif](http://f.cl.ly/items/1V0b3N4005372w261C0G/output.gif)
 
