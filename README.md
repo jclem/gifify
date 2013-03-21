@@ -13,7 +13,8 @@ curl -o /usr/local/bin/gifify -O https://raw.github.com/jclem/gifify/master/gifi
 
 ## Dependencies
 
-Requires the [CloudApp gem][2]
+1. Requires the [CloudApp gem][2]
+2. Requires ffmpeg (`brew install ffmpeg`)
 
 ## Usage
 
