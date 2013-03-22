@@ -1,5 +1,9 @@
 # Gifify Changelog
 
+## 2013-03-21
+
+* Fix generation of output name
+
 ## 2013-03-20
 
 * Upload to CloudApp by default (prevent with `-n` flag)
