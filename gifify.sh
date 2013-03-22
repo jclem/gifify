@@ -15,7 +15,6 @@ function printHelpAndExit {
   exit $1
 }
 
-output=$1
 noupload=0
 
 OPTERR=0
@@ -34,6 +33,11 @@ done
 shift $(( OPTIND - 1 ))
 
 filename=$1
+
+if [ -z ${output} ]; then
+  output=$filename
+fi
+
 if [ -z $filename ]; then printHelpAndExit 1; fi
 
 if [ $crop ]; then
