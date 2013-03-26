@@ -46,7 +46,7 @@ else
   crop=
 fi
 
-ffmpeg -i $filename -pix_fmt rgb24 -r 10 $crop ${output}.gif
+ffmpeg -i $filename $crop -r 10 -f image2pipe -vcodec ppm - | convert -verbose +dither -layers Optimize - ${output}.gif
 
 convert -layers Optimize ${output}.gif ${output}.gif
 
