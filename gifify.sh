@@ -48,8 +48,6 @@ fi
 
 ffmpeg -i $filename $crop -r 10 -f image2pipe -vcodec ppm - | convert -verbose +dither -layers Optimize - ${output}.gif
 
-convert -layers Optimize ${output}.gif ${output}.gif
-
 if [ $noupload -ne 1 ]; then
   echo `cloudapp -d ${output}.gif`
 
