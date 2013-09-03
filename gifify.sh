@@ -46,7 +46,11 @@ else
   crop=
 fi
 
-ffmpeg -i $filename $crop -r 10 -f image2pipe -vcodec ppm - | convert -verbose +dither -layers Optimize - ${output}.gif
+echo 'Exporting movie...'
+temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
+ffmpeg -loglevel panic -i $filename $crop -r 10 -f image2pipe -vcodec ppm - >> $temp
+echo 'Making gif...'
+cat $temp | convert +dither -layers Optimize - ${output}.gif
 
 if [ $noupload -ne 1 ]; then
   echo `cloudapp -d ${output}.gif`
