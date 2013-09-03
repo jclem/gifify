@@ -61,9 +61,14 @@ fi
 # due to the GIF format as well as GIF renderers that cap frame delays
 # < 3 to 3 or sometimes 10. Source:
 # http://humpy77.deviantart.com/journal/Frame-Delay-Times-for-Animated-GIFs-214150546
+echo 'Exporting movie...'
 delay=$(bc -l <<< "100/$fps/$speed")
+temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -i $filename $crop -r $fps -f image2pipe -vcodec ppm - | convert -verbose +dither -layers Optimize -delay $delay - ${output}.gif
+ffmpeg -loglevel panic -i $filename $crop -r $fps -f image2pipe -vcodec ppm - >> $temp
+
+echo 'Making gif...'
+cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
 
 if [ $noupload -ne 1 ]; then
   echo `cloudapp -d ${output}.gif`
