@@ -9,6 +9,9 @@ function printHelpAndExit {
   echo '  o OUTPUT: The basename of the file to be output (default "output")'
   echo '  n:        Do not upload the resulting image to CloudApp'
   echo '  r FPS:    Output at this (frame)rate (default 10)'
+  echo '  s SPEED:  Output using this speed modifier (default 1)'
+  echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
+  echo '            ensure that FPSxSPEED is not > ~60!'
   echo '  x:        Remove the original file and resulting .gif once the script is complete'
   echo ''
   echo 'Example:'
@@ -17,18 +20,19 @@ function printHelpAndExit {
 }
 
 noupload=0
-
 fps=10
+speed=1
 
 OPTERR=0
 
-while getopts "c:o:r:nx" opt; do
+while getopts "c:o:r:s:nx" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
     o) output=$OPTARG;;
     n) noupload=1;;
     r) fps=$OPTARG;;
+    s) speed=$OPTARG;;
     x) cleanup=1;;
     *) printHelpAndExit 1;;
   esac
@@ -50,8 +54,14 @@ else
   crop=
 fi
 
-# -delay uses time per tick and defaults to 100, so 60fps == -delay 1.666666
-delay=$(bc -l <<< "100/$fps")
+# -delay uses time per tick (a tick defaults to 1/100 of a second)
+# so 60fps == -delay 1.666666 which is rounded to 2 because convert
+# apparently stores this as an integer. To animate faster than 60fps,
+# you must drop frames, meaning you must specify a lower -r. This is
+# due to the GIF format as well as GIF renderers that cap frame delays
+# < 3 to 3 or sometimes 10. Source:
+# http://humpy77.deviantart.com/journal/Frame-Delay-Times-for-Animated-GIFs-214150546
+delay=$(bc -l <<< "100/$fps/$speed")
 
 ffmpeg -i $filename $crop -r $fps -f image2pipe -vcodec ppm - | convert -verbose +dither -layers Optimize -delay $delay - ${output}.gif
 

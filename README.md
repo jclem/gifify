@@ -45,6 +45,24 @@ gifify -c 100:100 recording.mov
 gifify -n recording.mov
 ```
 
+### Convert it, do not upload, and output at 60 frames per second:
+
+```sh
+gifify -r 60 -n recording.mov
+```
+
+### Convert it, do not upload, and output at 30 frames per second at 2x speed:
+
+```sh
+gifify -r 30 -s 2 -n recording.mov
+```
+
+### Convert it, do not upload, and output at 10 frames per second at 6x speed:
+
+```sh
+gifify -s 6 -n recording.mov
+```
+
 ### Convert it, upload it, then destroy the gif and the original file:
 
 ```sh
@@ -52,6 +70,10 @@ gifify -x recording.mov
 ```
 
 ![http://f.cl.ly/items/1V0b3N4005372w261C0G/output.gif](http://f.cl.ly/items/1V0b3N4005372w261C0G/output.gif)
+
+## Regarding framerates:
+
+GIF renderers typically cap the framerate somewhere between 60 and 100 frames per second. If you choose to change the framerate or playback speed of your GIFs, ensure your framerates do not exceed 60 frames per second to ensure your GIFs play consistently. An easy way to compute this is to ensure that FPS  (-r) x SPEED (-s) is not greater than 60.
 
 ## License
 
