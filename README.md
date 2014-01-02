@@ -73,7 +73,7 @@ gifify -x recording.mov
 
 ## Regarding framerates:
 
-GIF renderers typically cap the framerate somewhere between 60 and 100 frames per second. If you choose to change the framerate or playback speed of your GIFs, ensure your framerates do not exceed 60 frames per second to ensure your GIFs play consistently. An easy way to compute this is to ensure that FPS  (-r) x SPEED (-s) is not greater than 60.
+GIF renderers typically cap the framerate somewhere between 60 and 100 frames per second. If you choose to change the framerate or playback speed of your GIFs, ensure your framerates do not exceed 60 frames per second to ensure your GIFs play consistently. An easy way to compute this is to ensure that FPS  (`-r`) x SPEED (`-s`) is not greater than 60.
 
 ## License
 
