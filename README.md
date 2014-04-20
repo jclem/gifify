@@ -13,9 +13,8 @@ curl -o /usr/local/bin/gifify -O https://raw.github.com/jclem/gifify/master/gifi
 
 ## Dependencies
 
-1. [CloudApp gem][2]: `gem install cloudapp`
-2. ffmpeg: `brew install ffmpeg`
-3. imagemagick: `brew install imagemagick`
+1. ffmpeg: `brew install ffmpeg`
+2. imagemagick: `brew install imagemagick`
 
 ## Usage
 
