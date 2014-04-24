@@ -1,6 +1,6 @@
 # Gifify Changelog
 
-## 2014-04-20
+## 2014-04-24
 
 * Remove cloudapp gem dependency
 

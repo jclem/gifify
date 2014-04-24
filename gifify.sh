@@ -73,12 +73,7 @@ cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
 if [ $noupload -ne 1 ]; then
   open -a Cloud ${output}.gif
 
-  url=`pbpaste`
-  json=`curl -H "Accept: application/json" $url`
-  json=${json##*content_url\":\"}
-  json=${json%%\",*}
-
-  echo $json
+  echo `pbpaste`
 
   if [ $cleanup ]; then
     rm $filename
