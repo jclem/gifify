@@ -1,5 +1,9 @@
 # Gifify Changelog
 
+## 2014-04-20
+
+* Remove cloudapp gem dependency
+
 ## 2013-03-21
 
 * Fix generation of output name
