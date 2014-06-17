@@ -1,5 +1,9 @@
 # Gifify Changelog
 
+## 2014-06-17
+
+* Add scaling parameter from ffmpeg
+
 ## 2014-04-24
 
 * Remove cloudapp gem dependency
