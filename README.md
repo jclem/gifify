@@ -38,6 +38,12 @@ gifify -o new_gif recording.mov
 gifify -c 100:100 recording.mov
 ```
 
+### Convert it, scaling to 250x250, not uploading:
+
+```sh
+gifify -d 250:250 -n recording.mov
+```
+
 ### Convert it, and do not upload it to CloudApp:
 
 ```sh
