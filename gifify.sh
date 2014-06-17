@@ -13,6 +13,7 @@ function printHelpAndExit {
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
   echo '  x:        Remove the original file and resulting .gif once the script is complete'
+  echo '  d SCALE:  Set scaled dimensions of the final GIF (default no scale)'
   echo ''
   echo 'Example:'
   echo '  gifify -c 240:80 -o my-gif -x my-movie.mov'
