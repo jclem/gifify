@@ -13,7 +13,7 @@ function printHelpAndExit {
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
   echo '  x:        Remove the original file and resulting .gif once the script is complete'
-  echo '  d SCALE:  Set scaled dimensions of the final GIF (default no scale)'
+  echo '  d SCALE:  Scales GIF image to specified dimensions (default no scale)'
   echo ''
   echo 'Example:'
   echo '  gifify -c 240:80 -o my-gif -x my-movie.mov'
@@ -26,7 +26,7 @@ speed=1
 
 OPTERR=0
 
-while getopts "c:o:r:s:nx" opt; do
+while getopts "c:o:r:s:d:nx" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
@@ -73,7 +73,7 @@ echo 'Exporting movie...'
 delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -loglevel panic -i $filename $crop -r $fps -f image2pipe -vcodec ppm - >> $temp
+ffmpeg -loglevel panic -i $filename $crop -r $fps -f image2pipe $scale -vcodec ppm - >> $temp
 
 echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
