@@ -35,6 +35,7 @@ while getopts "c:o:r:s:nx" opt; do
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
     x) cleanup=1;;
+    d) scale=$OPTARG;;
     *) printHelpAndExit 1;;
   esac
 done
@@ -53,6 +54,12 @@ if [ $crop ]; then
   crop="-vf crop=${crop}:0:0"
 else
   crop=
+fi
+
+if [ $scale ]; then
+  scale="-vf scale=${scale}:0:0"
+else
+  scale=
 fi
 
 # -delay uses time per tick (a tick defaults to 1/100 of a second)
