@@ -80,13 +80,11 @@ cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
 
 if [ $noupload -ne 1 ]; then
   open -a Cloud ${output}.gif
-
   echo `pbpaste`
-
-  if [ $cleanup ]; then
-    rm $filename
-    rm ${output}.gif
-  fi
 else
   echo ${output}.gif
+fi
+
+if [ $cleanup ]; then
+  rm $temp
 fi
