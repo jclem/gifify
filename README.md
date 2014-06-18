@@ -50,25 +50,25 @@ gifify -d 250:250 -n recording.mov
 gifify -n recording.mov
 ```
 
-### Convert it, do not upload, and output at 60 frames per second:
+### Convert it and output at 60 frames per second:
 
 ```sh
-gifify -r 60 -n recording.mov
+gifify -r 60 recording.mov
 ```
 
-### Convert it, do not upload, and output at 30 frames per second at 2x speed:
+### Convert it and output at 30 frames per second at 2x speed:
 
 ```sh
-gifify -r 30 -s 2 -n recording.mov
+gifify -r 30 -s 2 recording.mov
 ```
 
-### Convert it, do not upload, and output at 10 frames per second at 6x speed:
+### Convert it and output at 10 frames per second at 6x speed:
 
 ```sh
-gifify -s 6 -n recording.mov
+gifify -s 6 recording.mov
 ```
 
-### Convert it, upload it, then destroy the gif and the original file:
+### Convert it, then destroy the gif and the original file:
 
 ```sh
 gifify -x recording.mov
