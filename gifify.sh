@@ -7,12 +7,10 @@ function printHelpAndExit {
   echo 'Options: (all optional)'
   echo '  c CROP:   The x and y crops, from the top left of the image, i.e. 640:480'
   echo '  o OUTPUT: The basename of the file to be output (default "output")'
-  echo '  n:        Do not upload the resulting image to CloudApp'
   echo '  r FPS:    Output at this (frame)rate (default 10)'
   echo '  s SPEED:  Output using this speed modifier (default 1)'
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
-  echo '  x:        Remove the original file and resulting .gif once the script is complete'
   echo '  d SCALE:  Scales GIF image to specified dimensions (default no scale)'
   echo ''
   echo 'Example:'
@@ -20,21 +18,18 @@ function printHelpAndExit {
   exit $1
 }
 
-noupload=0
 fps=10
 speed=1
 
 OPTERR=0
 
-while getopts "c:o:r:s:d:nx" opt; do
+while getopts "c:o:r:s:d" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
     o) output=$OPTARG;;
-    n) noupload=1;;
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
-    x) cleanup=1;;
     d) scale=$OPTARG;;
     *) printHelpAndExit 1;;
   esac
@@ -74,17 +69,10 @@ delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
 ffmpeg -loglevel panic -i $filename $crop -r $fps -f image2pipe $scale -vcodec ppm - >> $temp
+echo "Temp file created."
 
 echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
+cleanup=$(rm $temp) | echo "Temp file removed."
 
-if [ $noupload -ne 1 ]; then
-  open -a Cloud ${output}.gif
-  echo `pbpaste`
-else
-  echo ${output}.gif
-fi
-
-if [ $cleanup ]; then
-  rm $temp
-fi
+echo "Filename:" ${output}.gif
