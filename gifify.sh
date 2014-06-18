@@ -11,6 +11,7 @@ function printHelpAndExit {
   echo '  s SPEED:  Output using this speed modifier (default 1)'
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
+  echo '  x:        destroy original file and GIF.'
   echo '  d SCALE:  Scales GIF image to specified dimensions (default no scale)'
   echo ''
   echo 'Example:'
@@ -23,7 +24,7 @@ speed=1
 
 OPTERR=0
 
-while getopts "c:o:r:s:d" opt; do
+while getopts "c:o:r:s:d:x" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
@@ -31,6 +32,7 @@ while getopts "c:o:r:s:d" opt; do
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
     d) scale=$OPTARG;;
+    x) cleanup=1;;
     *) printHelpAndExit 1;;
   esac
 done
@@ -73,6 +75,12 @@ echo "Temp file created."
 
 echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
-cleanup=$(rm $temp) | echo "Temp file removed."
+cleartemp=$(rm $temp) | echo "Temp file removed."
 
-echo "Filename:" ${output}.gif
+if [ $cleanup ]; then
+    rm $filename
+    rm ${output}.gif
+    echo "Files deleted."
+else
+    echo "Filename:" ${output}.gif
+fi
