@@ -12,6 +12,7 @@ function printHelpAndExit {
   echo '  s SPEED:  Output using this speed modifier (default 1)'
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
+  echo '  p SCALE:  Rescale the output, e.g. 320:240'
   echo '  x:        Remove the original file and resulting .gif once the script is complete'
   echo ''
   echo 'Example:'
@@ -25,12 +26,13 @@ speed=1
 
 OPTERR=0
 
-while getopts "c:o:r:s:nx" opt; do
+while getopts "c:o:p:r:s:nx" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
     o) output=$OPTARG;;
     n) noupload=1;;
+    p) scale=$OPTARG;;
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
     x) cleanup=1;;
@@ -49,9 +51,21 @@ fi
 if [ -z $filename ]; then printHelpAndExit 1; fi
 
 if [ $crop ]; then
-  crop="-vf crop=${crop}:0:0"
+  crop="crop=${crop}:0:0"
 else
   crop=
+fi
+
+if [ $scale ]; then
+  scale="scale=${scale}"
+else
+  scale=
+fi
+
+if [ $scale ] || [ $crop ]; then
+  filter="-vf $scale$crop"
+else
+  filter=
 fi
 
 # -delay uses time per tick (a tick defaults to 1/100 of a second)
@@ -65,7 +79,7 @@ echo 'Exporting movie...'
 delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -loglevel panic -i $filename $crop -r $fps -f image2pipe -vcodec ppm - >> $temp
+ffmpeg -loglevel panic -i $filename $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
 
 echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
