@@ -2,7 +2,7 @@
 
 function printHelpAndExit {
   echo 'Usage:'
-  echo '  gifify -conx filename'
+  echo '  gifify [options] filename'
   echo ''
   echo 'Options: (all optional)'
   echo '  c CROP:   The x and y crops, from the top left of the image, i.e. 640:480'
