@@ -19,12 +19,13 @@ function printHelpAndExit {
   exit $1
 }
 
+noupload=0
 fps=10
 speed=1
 
 OPTERR=0
 
-while getopts "c:o:r:s:d:x" opt; do
+while getopts "c:o:r:s:d:nx" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
