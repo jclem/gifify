@@ -7,7 +7,7 @@ gifify is a shell script for converting screen recordings into GIFs that can be 
 Download the [gifify script][1] and make it available in your `PATH`.
 
 ```sh
-curl -o /usr/local/bin/gifify -O https://raw.github.com/jclem/gifify/master/gifify.sh && \
+curl -o /usr/local/bin/gifify -O https://raw.githubusercontent.com/jclem/gifify/master/gifify.sh && \
   chmod +x /usr/local/bin/gifify
 ```
 
@@ -38,42 +38,37 @@ gifify -o new_gif recording.mov
 gifify -c 100:100 recording.mov
 ```
 
-### Convert it, scaling to 250x250, not uploading:
-
-```sh
-gifify -d 250:250 -n recording.mov
-```
-
 ### Convert it, and do not upload it to CloudApp:
 
 ```sh
 gifify -n recording.mov
 ```
 
-### Convert it and output at 60 frames per second:
+### Convert it, do not upload, and output at 60 frames per second:
 
 ```sh
-gifify -r 60 recording.mov
+gifify -r 60 -n recording.mov
 ```
 
-### Convert it and output at 30 frames per second at 2x speed:
+### Convert it, do not upload, and output at 30 frames per second at 2x speed:
 
 ```sh
-gifify -r 30 -s 2 recording.mov
+gifify -r 30 -s 2 -n recording.mov
 ```
 
-### Convert it and output at 10 frames per second at 6x speed:
+### Convert it, do not upload, and output at 10 frames per second at 6x speed:
 
 ```sh
-gifify -s 6 recording.mov
+gifify -s 6 -n recording.mov
 ```
-### Convert it and add a subtitle to the bottom of the GIF:
+
+### Convert it, do not upload, and add a caption to the bottom
 
 ```sh
-gifify -t "This adds a caption to the GIF" recording.mov
+gifify -n -t "Add a caption to the the GIF recording.mov
 ```
 
-### Convert it, then destroy the gif and the original file:
+### Convert it, upload it, then destroy the gif and the original file:
 
 ```sh
 gifify -x recording.mov
