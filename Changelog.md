@@ -1,5 +1,9 @@
 # Gifify Changelog
 
+## 2014-09-10
+
+* Add a subtitle flag to caption GIFs
+
 ## 2014-06-17
 
 * Add scaling parameter from ffmpeg
