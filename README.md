@@ -69,7 +69,8 @@ gifify -s 6 recording.mov
 ```
 ### Convert it and add a subtitle to the bottom of the GIF:
 
-```sh gifify -t "This adds a caption to the GIF" recording.mov
+```sh
+gifify -t "This adds a caption to the GIF" recording.mov
 ```
 
 ### Convert it, then destroy the gif and the original file:
