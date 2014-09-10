@@ -100,7 +100,7 @@ echo 'Exporting movie...'
 delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -loglevel panic -i $filename $text $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
+ffmpeg -loglevel panic -i $filename $capfile $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
 
 echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
