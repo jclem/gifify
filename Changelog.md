@@ -2,11 +2,7 @@
 
 ## 2014-09-10
 
-* Add a subtitle flag to caption GIFs
-
-## 2014-06-17
-
-* Add scaling parameter from ffmpeg
+* Add captions with the `-t` flag and a string of text
 
 ## 2014-04-24
 
