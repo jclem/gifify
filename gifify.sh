@@ -12,7 +12,7 @@ function printHelpAndExit {
   echo '  s SPEED:  Output using this speed modifier (default 1)'
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
-  echo '  t TEXT    Add a caption to the image'
+  echo '  t TEXT:   Add a caption to the bottom of the image' 
   echo '  p SCALE:  Rescale the output, e.g. 320:240'
   echo '  x:        Remove the original file and resulting .gif once the script is complete'
   echo ''
@@ -22,6 +22,7 @@ function printHelpAndExit {
 }
 
 function getLength() {
+    #Gets the length of the GIF for the resulting .srt needed for captions
     ff=$(ffmpeg -i $filename 2>&1)
     d="${ff#*Duration: }"
     echo "${d%%,*}"
@@ -99,19 +100,18 @@ echo 'Exporting movie...'
 delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -loglevel panic -i $filename $capfile $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
+ffmpeg -loglevel panic -i $filename $text $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
 
 echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
 
 if [ $noupload -ne 1 ]; then
-    open -a Cloud ${output}.gif
-    
-    if [ $cleanup ]; then
-        rm $filename
-        rm ${output}.gif
-        echo "Files deleted."
-    fi
+  open -a Cloud ${output}.gif
+
+  if [ $cleanup ]; then
+    rm $filename
+    rm ${output}.gif
+  fi
 else
-    echo "Filename:" ${output}.gif
+  echo ${output}.gif
 fi
