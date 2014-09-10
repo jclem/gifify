@@ -2,7 +2,7 @@
 
 function printHelpAndExit {
   echo 'Usage:'
-  echo '  gifify -conx filename'
+  echo '  gifify [options] filename'
   echo ''
   echo 'Options: (all optional)'
   echo '  c CROP:   The x and y crops, from the top left of the image, i.e. 640:480'
@@ -11,28 +11,35 @@ function printHelpAndExit {
   echo '  s SPEED:  Output using this speed modifier (default 1)'
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
-  echo '  x:        destroy original file and GIF.'
-  echo '  d SCALE:  Scales GIF image to specified dimensions (default no scale)'
+  echo '  p SCALE:  Rescale the output, e.g. 320:240'
+  echo '  x:        Remove the original file and resulting .gif once the script is complete'
   echo ''
   echo 'Example:'
   echo '  gifify -c 240:80 -o my-gif -x my-movie.mov'
   exit $1
 }
 
-noupload=0
+function getLength() {
+    ff=$(ffmpeg -i $filename 2>&1)
+    d="${ff#*Duration: }"
+    echo "${d%%,*}"
+    exit $1
+}
+
 fps=10
 speed=1
 
 OPTERR=0
 
-while getopts "c:o:r:s:d:nx" opt; do
+while getopts "c:o:p:r:s:t:nx" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
     o) output=$OPTARG;;
+    p) scale=$OPTARG;;
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
-    d) scale=$OPTARG;;
+    t) text=$OPTARG;;
     x) cleanup=1;;
     *) printHelpAndExit 1;;
   esac
@@ -49,15 +56,32 @@ fi
 if [ -z $filename ]; then printHelpAndExit 1; fi
 
 if [ $crop ]; then
-  crop="-vf crop=${crop}:0:0"
+  crop="crop=${crop}:0:0"
 else
   crop=
 fi
 
 if [ $scale ]; then
-  scale="-vf scale=${scale}:0:0"
+  scale="scale=${scale}"
 else
   scale=
+fi
+
+if [ $scale ] || [ $crop ]; then
+  filter="-vf $scale$crop"
+else
+  filter=
+fi
+
+subtitles=${text}
+
+if [ "$text" ]; then
+    : > /tmp/subs.srt
+    text="$subtitles"
+    (echo 1; echo "00:00:00,000 -->"  $(getLength 1); echo "$subtitles") >> /tmp/subs.srt
+    capfile="-vf subtitles=/tmp/subs.srt"
+else
+    capfile=
 fi
 
 # -delay uses time per tick (a tick defaults to 1/100 of a second)
@@ -71,11 +95,10 @@ echo 'Exporting movie...'
 delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -loglevel panic -i $filename $crop -r $fps -f image2pipe $scale -vcodec ppm - >> $temp
-echo "Temp file created."
+ffmpeg -loglevel panic -i $filename $capfile $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
 
 echo 'Making gif...'
-cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
+cat $temp | convert - ${output}.gif
 cleartemp=$(rm $temp) | echo "Temp file removed."
 
 if [ $cleanup ]; then
