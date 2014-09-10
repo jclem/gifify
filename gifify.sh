@@ -7,10 +7,12 @@ function printHelpAndExit {
   echo 'Options: (all optional)'
   echo '  c CROP:   The x and y crops, from the top left of the image, i.e. 640:480'
   echo '  o OUTPUT: The basename of the file to be output (default "output")'
+  echo '  n:        Do not upload the resulting image to CloudApp'
   echo '  r FPS:    Output at this (frame)rate (default 10)'
   echo '  s SPEED:  Output using this speed modifier (default 1)'
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
+  echo '  t TEXT    Add a caption to the image'
   echo '  p SCALE:  Rescale the output, e.g. 320:240'
   echo '  x:        Remove the original file and resulting .gif once the script is complete'
   echo ''
@@ -26,6 +28,7 @@ function getLength() {
     exit $1
 }
 
+noupload=0
 fps=10
 speed=1
 
@@ -36,6 +39,7 @@ while getopts "c:o:p:r:s:t:nx" opt; do
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
     o) output=$OPTARG;;
+    n) noupload=1;;
     p) scale=$OPTARG;;
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
@@ -98,13 +102,16 @@ temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 ffmpeg -loglevel panic -i $filename $capfile $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
 
 echo 'Making gif...'
-cat $temp | convert - ${output}.gif
-cleartemp=$(rm $temp) | echo "Temp file removed."
+cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
 
-if [ $cleanup ]; then
-    rm $filename
-    rm ${output}.gif
-    echo "Files deleted."
+if [ $noupload -ne 1 ]; then
+    open -a Cloud ${output}.gif
+    
+    if [ $cleanup ]; then
+        rm $filename
+        rm ${output}.gif
+        echo "Files deleted."
+    fi
 else
     echo "Filename:" ${output}.gif
 fi
