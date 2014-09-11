@@ -65,7 +65,7 @@ gifify -s 6 -n recording.mov
 ### Convert it, do not upload, and add a caption to the bottom
 
 ```sh
-gifify -n -t "Add a caption to the the GIF recording.mov
+gifify -n -t "Add a caption to the the GIF" recording.mov
 ```
 
 ### Convert it, upload it, then destroy the gif and the original file:
