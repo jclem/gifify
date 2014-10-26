@@ -85,7 +85,7 @@ echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
 
 if [ $noupload -ne 1 ]; then
-  open -a Cloud ${output}.gif
+  open -a CloudApp ${output}.gif
 
   if [ $cleanup ]; then
     rm $filename
