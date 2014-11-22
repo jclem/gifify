@@ -1,23 +1,25 @@
 #!/usr/bin/env bash
 
 function printHelpAndExit {
-  echo 'Usage:'
-  echo '  gifify [options] filename'
-  echo ''
-  echo 'Options: (all optional)'
-  echo '  c CROP:   The x and y crops, from the top left of the image, i.e. 640:480'
-  echo '  o OUTPUT: The basename of the file to be output (default "output")'
-  echo '  n:        Do not upload the resulting image to CloudApp'
-  echo '  r FPS:    Output at this (frame)rate (default 10)'
-  echo '  s SPEED:  Output using this speed modifier (default 1)'
-  echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
-  echo '            ensure that FPSxSPEED is not > ~60!'
-  echo '  p SCALE:  Rescale the output, e.g. 320:240'
-  echo '  x:        Remove the original file and resulting .gif once the script is complete'
-  echo ''
-  echo 'Example:'
-  echo '  gifify -c 240:80 -o my-gif -x my-movie.mov'
-  exit $1
+cat <<EOF
+Usage:
+  gifify [options] filename
+
+Options: (all optional)
+  c CROP:   The x and y crops, from the top left of the image, i.e. 640:480
+  o OUTPUT: The basename of the file to be output (default "output")
+  n:        Do not upload the resulting image to CloudApp
+  r FPS:    Output at this (frame)rate (default 10)
+  s SPEED:  Output using this speed modifier (default 1)
+            NOTE: GIFs max out at 100fps depending on platform. For consistency,
+            ensure that FPSxSPEED is not > ~60!
+  p SCALE:  Rescale the output, e.g. 320:240
+  x:        Remove the original file and resulting .gif once the script is complete
+
+Example:
+  gifify -c 240:80 -o my-gif -x my-movie.mov
+EOF
+exit $1
 }
 
 noupload=0
