@@ -8,7 +8,6 @@ Usage:
 Options: (all optional)
   c CROP:   The x and y crops, from the top left of the image, i.e. 640:480
   o OUTPUT: The output file
-  n:        Do not upload the resulting image to CloudApp
   r FPS:    Output at this (frame)rate (default 10)
   s SPEED:  Output using this speed modifier (default 1)
             NOTE: GIFs max out at 100fps depending on platform. For consistency,
@@ -16,7 +15,6 @@ Options: (all optional)
   p SCALE:  Rescale the output, e.g. 320:240
   F         Fast mode produces results faster, at lower quality
   C         Conserve memory by writing frames to disk (slower)
-  x:        Remove the original file and resulting .gif once the script is complete
 
 Example:
   gifify -c 240:80 -o my-gif -x my-movie.mov
@@ -32,18 +30,16 @@ useio=0
 
 OPTERR=0
 
-while getopts "c:o:p:r:s:nxFCh" opt; do
+while getopts "c:o:p:r:s:FCh" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
     o) output=$OPTARG;;
-    n) noupload=1;;
     p) scale=$OPTARG;;
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
     F) fast=1;;
     C) useio=1;;
-    x) cleanup=1;;
     *) printHelpAndExit 1;;
   esac
 done
@@ -98,15 +94,4 @@ else
   ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm - >> "$temp"
   cat "$temp" | convert +dither -layers Optimize -delay $delay - gif:- | gifsicle --optimize=3 - > "$output"
   rm "$temp"
-fi
-
-if [ $noupload -ne 1 ]; then
-  open -a CloudApp "$output"
-
-  if [ $cleanup ]; then
-    rm "$filename"
-    rm "$output"
-  fi
-else
-  echo "$output"
 fi
