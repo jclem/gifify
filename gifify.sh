@@ -14,6 +14,7 @@ Options: (all optional)
             NOTE: GIFs max out at 100fps depending on platform. For consistency,
             ensure that FPSxSPEED is not > ~60!
   p SCALE:  Rescale the output, e.g. 320:240
+  F         Fast mode produces results faster, at lower quality
   C         Conserve memory by writing frames to disk (slower)
   x:        Remove the original file and resulting .gif once the script is complete
 
@@ -26,11 +27,12 @@ exit $1
 noupload=0
 fps=10
 speed=1
+fast=0
 useio=0
 
 OPTERR=0
 
-while getopts "c:o:p:r:s:nxCh" opt; do
+while getopts "c:o:p:r:s:nxFCh" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
@@ -39,6 +41,7 @@ while getopts "c:o:p:r:s:nxCh" opt; do
     p) scale=$OPTARG;;
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
+    F) fast=1;;
     C) useio=1;;
     x) cleanup=1;;
     *) printHelpAndExit 1;;
@@ -47,13 +50,13 @@ done
 
 shift $(( OPTIND - 1 ))
 
-filename=$1
+filename="$1"
 
 if [ -z "$output" ]; then
   output="${filename}.gif"
 fi
 
-if [ -z $filename ]; then printHelpAndExit 1; fi
+if [ -z "$filename" ]; then printHelpAndExit 1; fi
 
 if [ $crop ]; then
   crop="crop=${crop}:0:0"
@@ -83,11 +86,17 @@ fi
 delay=$(bc -l <<< "100/$fps/$speed")
 
 if [ $useio -ne 1 ]; then
-  ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm - | convert +dither -layers Optimize -delay $delay - "$output"
+  if [ $fast -ne 1 ]; then
+    ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm - | convert +dither -layers Optimize -delay $delay - gif:- | gifsicle --optimize=3 - > "$output"
+  else
+    # gifsicle accepts only int values for delay
+    delay=$(( 100 / $fps / $speed ))
+    ffmpeg -loglevel panic -i "$filename" $filter -r $fps -pix_fmt rgb24 -f gif - | gifsicle --optimize=3 --delay=${delay} - > "$output"
+  fi
 else
   temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
   ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm - >> "$temp"
-  cat "$temp" | convert +dither -layers Optimize -delay $delay - "$output"
+  cat "$temp" | convert +dither -layers Optimize -delay $delay - gif:- | gifsicle --optimize=3 - > "$output"
   rm "$temp"
 fi
 
