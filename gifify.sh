@@ -48,7 +48,7 @@ if [ -z ${output} ]; then
   output=$filename
 fi
 
-if [ -z $filename ]; then printHelpAndExit 1; fi
+if [ -z "$filename" ]; then printHelpAndExit 1; fi
 
 if [ $crop ]; then
   crop="crop=${crop}:0:0"
@@ -79,18 +79,18 @@ echo 'Exporting movie...'
 delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -loglevel panic -i $filename $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
+ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
 
 echo 'Making gif...'
-cat $temp | convert +dither -layers Optimize -delay $delay - ${output}.gif
+cat $temp | convert +dither -layers Optimize -delay $delay - "${output}.gif"
 
 if [ $noupload -ne 1 ]; then
-  open -a CloudApp ${output}.gif
+  open -a CloudApp "${output}.gif"
 
   if [ $cleanup ]; then
-    rm $filename
-    rm ${output}.gif
+    rm "$filename"
+    rm "${output}.gif"
   fi
 else
-  echo ${output}.gif
+  echo "${output}.gif"
 fi
