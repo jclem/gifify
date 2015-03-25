@@ -4,17 +4,9 @@ gifify is a shell script for converting screen recordings into GIFs that can be 
 
 ## Installation
 
-Download the [gifify script][1] and make it available in your `PATH`.
-
 ```sh
-curl -o /usr/local/bin/gifify -O https://raw.githubusercontent.com/jclem/gifify/master/gifify.sh && \
-  chmod +x /usr/local/bin/gifify
+brew install gifify
 ```
-
-## Dependencies
-
-1. ffmpeg: `brew install ffmpeg`
-2. imagemagick: `brew install imagemagick`
 
 ## Usage
 
