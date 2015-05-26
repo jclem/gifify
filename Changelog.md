@@ -1,5 +1,14 @@
 # Gifify Changelog
 
+## 2015-03-25
+
+* Handle filenames with spaces correctly
+
+## 2014-08-29
+
+* Add scaling
+* Remove output of CloudApp link
+
 ## 2014-04-24
 
 * Remove cloudapp gem dependency
