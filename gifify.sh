@@ -7,12 +7,12 @@ function printHelpAndExit {
   echo 'Options: (all optional)'
   echo '  c CROP:   The x and y crops, from the top left of the image, i.e. 640:480'
   echo '  o OUTPUT: The basename of the file to be output (default "output")'
-  echo '  n:        Do not upload the resulting image to CloudApp'
   echo '  r FPS:    Output at this (frame)rate (default 10)'
   echo '  s SPEED:  Output using this speed modifier (default 1)'
   echo '            NOTE: GIFs max out at 100fps depending on platform. For consistency,'
   echo '            ensure that FPSxSPEED is not > ~60!'
   echo '  p SCALE:  Rescale the output, e.g. 320:240'
+  echo '  u:        Upload the resulting image to CloudApp'
   echo '  x:        Remove the original file and resulting .gif once the script is complete'
   echo ''
   echo 'Example:'
@@ -20,21 +20,21 @@ function printHelpAndExit {
   exit $1
 }
 
-noupload=0
+upload=0
 fps=10
 speed=1
 
 OPTERR=0
 
-while getopts "c:o:p:r:s:nx" opt; do
+while getopts "c:o:p:r:s:ux" opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
     o) output=$OPTARG;;
-    n) noupload=1;;
     p) scale=$OPTARG;;
     r) fps=$OPTARG;;
     s) speed=$OPTARG;;
+    u) upload=1;;
     x) cleanup=1;;
     *) printHelpAndExit 1;;
   esac
@@ -84,7 +84,7 @@ ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm 
 echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - "${output}.gif"
 
-if [ $noupload -ne 1 ]; then
+if [ $upload -eq 1 ]; then
   open -a CloudApp "${output}.gif"
 
   if [ $cleanup ]; then
