@@ -12,52 +12,52 @@ brew install gifify
 
 Given a file `recording.mov`:
 
-### Convert it into recording.mov.gif, and upload it to CloudApp:
+### Convert it into recording.mov.gif:
 
 ```sh
 gifify recording.mov
 ```
 
-### Convert it into new_gif.gif, and upload it to CloudApp
+### Convert it into new_gif.gif:
 
 ```sh
 gifify -o new_gif recording.mov
 ```
 
-### Convert it, cropping the top left corner, and upload:
+### Convert it, cropping the top left corner:
 
 ```sh
 gifify -c 100:100 recording.mov
 ```
 
-### Convert it, and do not upload it to CloudApp:
+### Convert it, and upload it to CloudApp:
 
 ```sh
-gifify -n recording.mov
+gifify -u recording.mov
 ```
 
-### Convert it, do not upload, and output at 60 frames per second:
+### Convert it, upload it, and output at 60 frames per second:
 
 ```sh
-gifify -r 60 -n recording.mov
+gifify -r 60 -u recording.mov
 ```
 
-### Convert it, do not upload, and output at 30 frames per second at 2x speed:
+### Convert it, upload it, and output at 30 frames per second at 2x speed:
 
 ```sh
-gifify -r 30 -s 2 -n recording.mov
+gifify -r 30 -s 2 -u recording.mov
 ```
 
-### Convert it, do not upload, and output at 10 frames per second at 6x speed:
+### Convert it, upload it, and output at 10 frames per second at 6x speed:
 
 ```sh
-gifify -s 6 -n recording.mov
+gifify -s 6 -u recording.mov
 ```
 
 ### Convert it, upload it, then destroy the gif and the original file:
 
 ```sh
-gifify -x recording.mov
+gifify -ux recording.mov
 ```
 
 ![http://f.cl.ly/items/1V0b3N4005372w261C0G/output.gif](http://f.cl.ly/items/1V0b3N4005372w261C0G/output.gif)
