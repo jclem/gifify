@@ -4,6 +4,7 @@
 
 * Remove CloudApp uploading
 * Combine FPS and speed into a single flag
+* Add -l loop option
 
 ## 2015-03-25
 

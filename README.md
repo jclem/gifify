@@ -44,6 +44,12 @@ gifify -r 60 recording.mov
 gifify -r 30@2 recording.mov
 ```
 
+- Convert it and output at 30 frames per second at 2x speed, with a single loop:
+
+```sh
+gifify -r 30@2 -l 1 recording.mov
+```
+
 ## Regarding framerates:
 
 GIF renderers typically cap the framerate somewhere between 60 and 100 frames
