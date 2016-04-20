@@ -1,5 +1,9 @@
 # Gifify Changelog
 
+## 2016-04-20
+
+* Remove CloudApp uploading
+
 ## 2015-03-25
 
 * Handle filenames with spaces correctly
