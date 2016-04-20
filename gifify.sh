@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 function printHelpAndExit {
   echo 'Usage:'
   echo '  gifify [options] filename'
@@ -18,7 +20,10 @@ function printHelpAndExit {
   exit $1
 }
 
+crop=
+output=
 fpsspeed='10@1'
+scale=
 
 OPTERR=0
 
@@ -70,8 +75,6 @@ fi
 # frame delays < 3 to 3 or sometimes 10. Source:
 # http://humpy77.deviantart.com/journal/Frame-Delay-Times-for-Animated-GIFs-214150546
 
-echo 'Exporting movie...'
-
 fps=$(echo $fpsspeed | cut -d'@' -f1)
 speed=$(echo $fpsspeed | cut -d'@' -f2)
 
@@ -83,7 +86,5 @@ delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
 ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
-
-echo 'Making gif...'
 cat $temp | convert +dither -layers Optimize -delay $delay - "${output}.gif"
 echo "${output}.gif"
