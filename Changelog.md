@@ -3,6 +3,7 @@
 ## 2016-04-20
 
 * Remove CloudApp uploading
+* Combine FPS and speed into a single flag
 
 ## 2015-03-25
 
