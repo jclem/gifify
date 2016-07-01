@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 function printHelpAndExit {
   echo 'Usage:'
   echo '  gifify [options] filename'
@@ -21,6 +19,14 @@ function printHelpAndExit {
   echo '  gifify -c 240:80 -o my-gif my-movie.mov'
   exit $1
 }
+
+if [ -z "$1" ] || [ -n "$2" ]; then
+  echo 'You need to give exactly one argument'
+  echo ''
+  printHelpAndExit 1
+fi
+
+set -euo pipefail
 
 crop=
 output=
