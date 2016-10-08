@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
+trap 'rm -f $temp' EXIT
 
 function printHelpAndExit {
   echo 'Usage:'
@@ -16,10 +17,22 @@ function printHelpAndExit {
   echo '               below approximately 60.'
   echo '  p SCALE:     Rescale the output, e.g. 320:240'
   echo '  x:           Remove the original file and resulting .gif once the script is complete'
+  echo '  f from:      The start time of the clip, in seconds'
+  echo '  t to:        The end time of the clip, in seconds'
   echo ''
   echo 'Example:'
   echo '  gifify -c 240:80 -o my-gif my-movie.mov'
   exit $1
+}
+
+# convert time duration to integer seconds
+function time2sec () {
+  local t i sec=0
+  t=${1%.*}
+  for i in ${t//:/ }; do
+    sec=$(($sec * 60 + $i))
+  done
+  echo $sec
 }
 
 crop=
@@ -30,7 +43,7 @@ scale=
 
 OPTERR=0
 
-while getopts 'c:o:l:p:r:s:' opt; do
+while getopts 'c:o:l:p:r:s:f:t:' opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
@@ -38,6 +51,8 @@ while getopts 'c:o:l:p:r:s:' opt; do
     l) loop=$OPTARG;;
     r) fpsspeed=$OPTARG;;
     p) scale=$OPTARG;;
+    f) from="$OPTARG";;
+    t) to="$OPTARG";;
     *) printHelpAndExit 1;;
   esac
 done
@@ -82,13 +97,24 @@ fi
 fps=$(echo $fpsspeed | cut -d'@' -f1)
 speed=$(echo $fpsspeed | cut -d'@' -f2)
 
-if [ ! -z "$speed" ]; then
+if [ -z "$speed" ]; then
   speed=1
+fi
+
+if [ ! -z "$to" ]; then
+  if [ ! -z "$from" -a $(time2sec $from) -gt $(time2sec $to) ]; then
+    echo "gifify: '-t $to' must be greater than '-f $from'"
+    exit 1
+  fi
+  to="-to $to"
+fi
+if [ ! -z "$from" ]; then
+  from="-ss $from"
 fi
 
 delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
+ffmpeg -loglevel panic -i "$filename" $from $to $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
 cat $temp | convert +dither -layers Optimize -loop $loop -delay $delay - "${output}.gif"
 echo "${output}.gif"
