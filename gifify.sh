@@ -44,7 +44,7 @@ done
 
 shift $(( OPTIND - 1 ))
 
-filename=$1
+filename=${1:-}
 
 if [ -z ${output} ]; then
   output=$filename
