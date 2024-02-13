@@ -19,7 +19,7 @@ function printHelpAndExit {
   echo ''
   echo 'Example:'
   echo '  gifify -c 240:80 -o my-gif my-movie.mov'
-  exit $1
+  exit "$1"
 }
 
 crop=
@@ -30,7 +30,7 @@ scale=
 
 OPTERR=0
 
-while getopts 'c:o:l:p:r:s:' opt; do
+while getopts 'c:h:o:l:p:r:s:' opt; do
   case $opt in
     c) crop=$OPTARG;;
     h) printHelpAndExit 0;;
@@ -46,25 +46,25 @@ shift $(( OPTIND - 1 ))
 
 filename=$1
 
-if [ -z ${output} ]; then
+if [ -z "${output}" ]; then
   output=$filename
 fi
 
 if [ -z "$filename" ]; then printHelpAndExit 1; fi
 
-if [ $crop ]; then
+if [ "$crop" ]; then
   crop="crop=${crop}:0:0"
 else
   crop=
 fi
 
-if [ $scale ]; then
+if [ "$scale" ]; then
   scale="scale=${scale}"
 else
   scale=
 fi
 
-if [ $scale ] || [ $crop ]; then
+if [ "$scale" ] || [ "$crop" ]; then
   filter="-vf $scale$crop"
 else
   filter=
@@ -79,16 +79,16 @@ fi
 # frame delays < 3 to 3 or sometimes 10. Source:
 # http://humpy77.deviantart.com/journal/Frame-Delay-Times-for-Animated-GIFs-214150546
 
-fps=$(echo $fpsspeed | cut -d'@' -f1)
-speed=$(echo $fpsspeed | cut -d'@' -f2)
+fps=$(echo "$fpsspeed" | cut -d'@' -f1)
+speed=$(echo "$fpsspeed" | cut -d'@' -f2)
 
-if [ ! -z "$speed" ]; then
+if [ -n "$speed" ]; then
   speed=1
 fi
 
 delay=$(bc -l <<< "100/$fps/$speed")
 temp=$(mktemp /tmp/tempfile.XXXXXXXXX)
 
-ffmpeg -loglevel panic -i "$filename" $filter -r $fps -f image2pipe -vcodec ppm - >> $temp
-cat $temp | convert +dither -layers Optimize -loop $loop -delay $delay - "${output}.gif"
+ffmpeg -loglevel panic -i "$filename" "$filter" -r "$fps" -f image2pipe -vcodec ppm - >> "$temp"
+convert < "$temp" | +dither -layers Optimize -loop "$loop" -delay "$delay" - "${output}.gif"
 echo "${output}.gif"
